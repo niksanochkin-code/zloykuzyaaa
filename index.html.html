@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Злобный Кузя</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at center, #0f0f0f, #000000);
+      font-family: 'Arial', sans-serif;
+      color: #00ffcc;
+      overflow: hidden;
+    }
+
+    .window {
+      background: #111;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc;
+      animation: glow 2s infinite alternate;
+      display: none;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 10px #00ffcc; }
+      to { box-shadow: 0 0 30px #00ffcc, 0 0 60px #00ffcc; }
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #00ffcc;
+      color: #000;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      background: #00ffaa;
+    }
+
+    #screamer {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: black;
+      z-index: 9999;
+    }
+
+    #screamer img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Класс для вращения картинки */
+    #screamer img.rotate {
+      animation: rotate 2s linear infinite;
+    }
+  </style>
+</head>
+<body>
+  <!-- Первое окно -->
+  <div class="window" id="window1" style="display: block;">
+    <h1>Хочешь узнать биографию Кузи?</h1>
+    <button onclick="showConfirm()">Да! Хочу!</button>
+  </div>
+
+  <!-- Второе окно -->
+  <div class="window" id="window2">
+    <h1>Ты уверен, что хочешь?<br>Нажми кнопку и скажи "Хочу"</h1>
+    <button onclick="startScreamer()">Хочу!</button>
+  </div>
+
+  <!-- Скример -->
+  <div id="screamer">
+    <img src="кузя.jpg" alt="boo">
+    <audio id="sound1" src="sound1.mp3"></audio>
+    <audio id="sound2" src="sound2.mp3"></audio>
+  </div>
+
+  <script>
+    function showConfirm() {
+      document.getElementById("window1").style.display = "none";
+      document.getElementById("window2").style.display = "block";
+    }
+
+    function startScreamer() {
+      document.getElementById("window2").style.display = "none";
+
+      setTimeout(() => {
+        const screamer = document.getElementById("screamer");
+        const img = screamer.querySelector("img");
+        const s1 = document.getElementById("sound1");
+        const s2 = document.getElementById("sound2");
+
+        screamer.style.display = "block";
+
+        // Включаем вращение картинки при первом аудио
+        img.classList.add("rotate");
+
+        s1.addEventListener("ended", () => {
+          // Останавливаем вращение после окончания первого аудио
+          img.classList.remove("rotate");
+          s2.play().catch(err => console.log("Ошибка второго звука:", err));
+        });
+
+        s1.play().catch(err => console.log("Ошибка первого звука:", err));
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
